@@ -60,6 +60,10 @@
 
 ### Community
 
+- 리뷰 게시판은 기본적인 CRUD를 구현
+
+
+
 - 커뮤니티-리뷰생성
 
 ![image-20210520173840191](최종README.assets/image-20210520173840191.png)
@@ -220,17 +224,114 @@ n년전 박스오피스를 넘기는것은 쉬웠다.
 # 5/23
 
 - 영화 좋아요 기능 구현
-- 영화 유저별 추천 페이지 구현
+- 영화 유저별 추천 영화 구현
 - 데이터 로드 속도 개선
 - Vue 유저별 추천페이지 구현 (진행중)
 
 ----------
 
+-  :exclamation: 데이터 로드속도가 너무 느린 현상  :exclamation:
+  - 보니깐 데이터의 시리얼라이즈를 두번씩했다. 한번으로 수정
+  - if 를 통해 데이터가 들어있는 경우 데이터를 새로 불러오지 않도록 조치
 
 
 
+# 5/24
+
+Vue 유저별 추천페이지 구현 (진행중)
+
+--------------
+
+-  :exclamation: ​유저별 추천페이지 백을 완성하고 프론트에서 돌렸는데 예전 페이지가 남는 현상  :exclamation:
+  - URL의 변수(userid)는 잘받았는데 웹페이지의 url이 변경되지않는다.
+  - 그래서 전의 페이지인채로 남아있다.
+  - 실패 ​실패 실패 실패 실패 실패 :sob:
+
+<img src="최종README.assets/image-20210525224927565.png" alt="image-20210525224927565" style="zoom:50%;" />
+
+계속 뭔가 시도를 했으나 실패... 최후의 방법인 스택 오버플로우에 질문을 올리고 마무리했다.
+
+https://stackoverflow.com/questions/67670721/how-do-i-change-url-in-the-vue
 
 
+
+# 5/25
+
+Vue 유저별 추천페이지 구현 (갓민철! 갓민철! 갓민철!)
+
+-----명세끝--------
+
+네이버 API 이용해서 박스오피스의 포스터 속성 연결해주기
+
+메인페이지에 네이버API 영화 데이터 프론트로 넘겨주기
+
+n년전 박스오피스 구성, 프론트 구현
+
+----------
+
+-  :exclamation: 유저별 추천페이지 백을 완성하고 프론트에서 돌렸는데 예전 페이지가 남는 현상  :exclamation:
+
+  - 어제 그렇게 속을 썩혔던 문제 
+  - 
+
+  
+
+- 네이버 API 이용해서 박스오피스의 포스터 속성 연결
+
+  - https://yobro.tistory.com/m/151?category=799433 :thumbsup:
+
+  - 데이터의 형태를 파악해서 잘 불러오는건 TMDB나 박스오피스든 API라면 필수적인 과정인듯하다.
+
+    
+
+- 네이버 영화검색 API 이용해서 박스오피스의 포스터 속성 연결
+
+  - 박스오피스의 API에는 영화포스터가 없다
+  - 박스오피스 영화의 `movieNm`을 변수로 넘겨서 네이버 API에서 포스터를 받아와 넣었다. 
+
+  ```python
+  for movie in box_office['dailyBoxOfficeList']:
+              box_movie=movie.get('movieNm')
+              url = f"https://openapi.naver.com/v1/search/movie.json?query={box_movie}"
+              res=requests.get(url,headers=header_parms)
+              data =res.json()
+              new_movie = BoxofficeMovie(
+                      pk = cnt,
+                      movie_title=movie.get('movieNm'),
+                      poster_path= data['items'][0]['image'],
+              )
+  ```
+
+  
+
+- :heavy_exclamation_mark: 메인페이지에 TMDB 는 잘불러와지는데 Naver 랑 Boxoffice가 제대로 안불러와지는 현상​ :heavy_exclamation_mark:
+
+  - 시리얼라이즈의 문제인걸 진작에 파악 하지만 뻘짓
+  - serialize.py 에서  `serializers.ModelSerializer` 가 `serializers.Serializer` 였다. :face_with_head_bandage: 
+  - 당연히 잘되있을거라 생각한 부분때문에 시간을 엄청 잡아먹었다.
+
+
+
+- n년전 박스오피스 구성, 프론트 구현
+
+  - 기본적인 페이지 구성이라 어렵진 않았지만 받은 데이터를 나누는거에 잠깐 멈칫하고 computed 사용
+
+  ```vue
+  <template>
+    <div>
+        <BoxOfficeItem v-for="movie in boxOffice_OneYears" :key="movie.id" :movie="movie"/>
+    </div>
+  </template>
+  <script>
+    computed: {
+      boxOffice_OneYears: function () {
+        return this.movieList.slice(0, 10)
+      },
+    }
+  </script>
+  ```
+
+  
 
 
 
@@ -268,3 +369,28 @@ n년전 박스오피스를 넘기는것은 쉬웠다.
 
   - 일단 포스트맨에서 성환형한테 로그인한채로 진행하는걸 배웠는데 왜 안될까...
   - username, user.id , user_id , pk 뭐를 받아야되는걸까 머리가 아찔하다. :weary:
+
+
+
+5/23
+
+- 포스트맨에서 로그인하는법이 view에서 데코레이터를 안해줘서 토큰을 읽지못했었다 이부분을 해결하고 로그인채로 좋아요기능 만들기 시작하니 뚝딱 했다. 
+- 데이터를 불러오는게 느렸는데 다른 팀원들한테 물어보면서 봤는데 다양한 방식들이 나와서 다들 천재인줄..
+  - 코딩에 시리얼라이져가 두번하는 실수가있었는데 그걸 동건이가 캐치했다. :thumbsup:
+- 유저별 추천페이지를 구현하는데 역참조를 하면 더쉬웠을까? 라는 생각이 맴돈다. 일단 구현했으니 명세서 살펴보고 한번 더 봐야할 부분이다.
+- 뷰를 이용해 추천페이지를 만들어야하는데 역시 뷰는 배운지 얼마안되고 미숙하다보니 어렵다.
+- 내일 명세 어떻게든 마무리 짓고 맘편히 진행하고 싶다. ㅠㅠ 그래도 오늘은 진행을 많이해서 만족스럽다.
+
+
+
+5/24
+
+- 진짜 오늘은 무기력했다. 뷰가 미숙해서 그런가 하루종일 페이지 잡고 늘어져있었다.
+
+
+
+5/25
+
+- 민철이형이 어제의 문제를 해결해주었다. :dancing_women: 갓민철! 갓민철! 갓민철! :dancing_men:
+- 명세가 끝나고 좀 편할줄 알았는데 생각보다 할게 많이 남아있다.
+- 장고도 그렇지만 뷰에대해서 좀미숙했는데 조금씩 참여하면서 만져보니 부분부분 이해가 간다.
