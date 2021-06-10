@@ -6,7 +6,7 @@
 
 ## 시연 영상
 
-![MEMOVIE 시연영상](README.assets/MEMOVIE 시연영상.gif)
+![MEMOVIE 시연영상 (2)](README.assets/MEMOVIE 시연영상 (2).gif)
 
 --------------
 
