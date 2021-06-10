@@ -2,7 +2,15 @@
 
 
 
+
+
+## 시연 영상
+
+![MEMOVIE 시연영상](README.assets/MEMOVIE 시연영상.gif)
+
 --------------
+
+
 
 # MEMOVIES
 
