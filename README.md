@@ -6,7 +6,7 @@
 
 ## 시연 영상
 
-![MEMOVIE 시연영상 (2)](README.assets/MEMOVIE 시연영상 (2).gif)
+![MEMOVIE 시연영상 (1)](https://user-images.githubusercontent.com/77470435/121485569-41a95700-ca0b-11eb-855b-ad957cffdb93.gif)
 
 --------------
 
